@@ -1,0 +1,15 @@
+# Numerous always-ignore extensions
+*.log
+
+# OS or Editor folders
+.DS_Store
+Thumbs.db
+
+# NPM packages folder.
+node_modules/
+
+# Temporary files folder.
+/tmp/
+
+# Webpack output folder.
+dist/

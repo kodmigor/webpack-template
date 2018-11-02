@@ -1,2 +1,3 @@
-# react-native-template
+# webpack-template
+
 js, sass.
