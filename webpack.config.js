@@ -1,39 +1,59 @@
-const path = require(`path`);
-const ExtractTextPlugin = require(`extract-text-webpack-plugin`);
+const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+
+const isProduction = process.env.NODE_ENV === "production";
+const mode = isProduction ? "production" : "development";
 
 const config = {
-    entry: `./src/index.js`,
-    output: {
-        path: path.resolve(__dirname, `./dist`),
-        filename: `main.js`,
-        publicPath: "/dist"
-    },
-    devtool: `eval-sourcemap`,
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                use: {
-                    loader: `babel-loader`
-                },
-                exclude: `/node_modules/`
-            },
-            {
-                test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    // fallback: "style-loader",
-                    use: "css-loader"
-                })
-                // use: [`style-loader`, `css-loader`]
-            }
+  mode,
+  entry: "./src/index.js",
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "main.[chunkhash:6].js"
+  },
+  devtool: isProduction ? "source-map" : "cheap-module-eval-source-map",
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: {
+          loader: "babel-loader"
+        },
+        exclude: "/node_modules/"
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          "style-loader",
+          MiniCssExtractPlugin.loader,
+          "css-loader",
+          "sass-loader"
         ]
-    },
-    plugins: [new ExtractTextPlugin("style.css")]
+      }
+    ]
+  },
+  plugins: [
+    new CleanWebpackPlugin("dist", {}),
+    new MiniCssExtractPlugin({
+      filename: "style.[contenthash:6].css"
+    }),
+    new HtmlWebpackPlugin({
+      inject: false,
+      hash: true,
+      template: "./src/index.html",
+      filename: "index.html",
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+        removeRedundantAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        useShortDoctype: true
+      }
+    })
+  ]
 };
 
-module.exports = (env, options) => {
-    const production = options.mode === `production`;
-    config.devtool = production ? `source-map` : `eval-source-map`;
-
-    return config;
-};
+module.exports = config;
