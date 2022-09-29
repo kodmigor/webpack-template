@@ -45,8 +45,8 @@ const config = {
       template: "./src/index.html",
       filename: "index.html",
       minify: {
-        collapseWhitespace: true,
         removeComments: true,
+        collapseWhitespace: true,
         removeRedundantAttributes: true,
         removeScriptTypeAttributes: true,
         removeStyleLinkTypeAttributes: true,
